@@ -8,6 +8,9 @@ app.use(express.static("public"));
 const port = process.env.APP_PORT;
 const host = process.env.APP_HOST;
 
+// MIDDLEWARES
+app.use(express.static("public"));
+
 // HOMEPAGE ROUTE
 app.get("/", (req, res) => {
   res.json({ message: "ok" });
