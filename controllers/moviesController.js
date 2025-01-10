@@ -3,7 +3,7 @@ function index(req, res) {
 }
 
 function show(req, res) {
-  res.json({ message: "index" });
+  res.json({ message: "show" });
 }
 
-module.exports = { index };
+module.exports = { index, show };

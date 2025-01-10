@@ -9,6 +9,7 @@ const port = process.env.APP_PORT;
 const host = process.env.APP_HOST;
 
 // MIDDLEWARES
+app.use(express.json());
 app.use(express.static("public"));
 
 // HOMEPAGE ROUTE
@@ -19,6 +20,13 @@ app.get("/", (req, res) => {
 // MOVIESROUTER ROUTE
 const moviesRouter = require("./routers/moviesRouter");
 app.use("/movies", moviesRouter);
+
+// ERROR HANDLERS
+const notFound = require("./middlewares/notFound");
+const errorsHandler = require("./middlewares/errorHandler");
+
+app.use(errorsHandler);
+app.use(notFound);
 
 // SERVER LISTENING
 app.listen(port, () => {
