@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const moviesController = require("../controllers/moviesController");
 
-router.get("/", (req, res) => {
-  res.json({ message: "ci sei" });
-});
+router.get("/", moviesController.index);
 
 module.exports = router;

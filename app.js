@@ -8,11 +8,12 @@ app.use(express.static("public"));
 const port = process.env.APP_PORT;
 const host = process.env.APP_HOST;
 
-// ROUTES
+// HOMEPAGE ROUTE
 app.get("/", (req, res) => {
   res.json({ message: "ok" });
 });
 
+// MOVIESROUTER ROUTE
 const moviesRouter = require("./routers/moviesRouter");
 app.use("/movies", moviesRouter);
 
