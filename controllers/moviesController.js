@@ -17,7 +17,7 @@ function index(req, res) {
     const newResults = results.map((movie) => {
       return {
         ...movie,
-        image: correctImagePath(movie.image),
+        image: movie.image ? correctImagePath(movie.image) : null,
       };
     });
     res.json(newResults);
@@ -35,6 +35,13 @@ function show(req, res) {
       return res.status(500).json({
         status: "KO",
         message: "Query failed",
+      });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({
+        status: "KO",
+        message: "Movie not found",
       });
     }
 
