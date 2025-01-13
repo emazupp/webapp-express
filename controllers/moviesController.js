@@ -33,15 +33,33 @@ function show(req, res) {
       });
     }
 
-    res.json(correctImagePath(results));
+    let movie = results[0];
+    movie.image = correctImagePath(movie);
+    const reviewsSql =
+      "SELECT reviews.name, reviews.vote, reviews.text, reviews.updated_at FROM movies INNER JOIN reviews ON movies.id=reviews.movie_id WHERE movies.id = ?";
+
+    connection.query(reviewsSql, [movieID], (err, reviews) => {
+      if (err) {
+        console.log(err);
+
+        return res.status(500).json({
+          status: "KO",
+          message: "Query failed",
+        });
+      }
+      console.log("query ok");
+
+      movie.reviews = reviews;
+      res.json(movie);
+    });
   });
 }
 
-function correctImagePath(movies) {
-  return movies.map((movie) => ({
+function correctImagePath(movie) {
+  return {
     ...movie,
     image: `http://${APP_HOST}:${APP_PORT}/movies_cover/${movie.image}`,
-  }));
+  };
 }
 
 module.exports = { index, show };
