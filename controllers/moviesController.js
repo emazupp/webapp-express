@@ -14,8 +14,13 @@ function index(req, res) {
         message: "Query failed",
       });
     }
-
-    res.json(correctImagePath(results));
+    const newResults = results.map((movie) => {
+      return {
+        ...movie,
+        image: correctImagePath(movie.image),
+      };
+    });
+    res.json(newResults);
   });
 }
 
@@ -34,7 +39,8 @@ function show(req, res) {
     }
 
     let movie = results[0];
-    movie.image = correctImagePath(movie);
+    movie.image = correctImagePath(movie.image);
+
     const reviewsSql =
       "SELECT reviews.name, reviews.vote, reviews.text, reviews.updated_at FROM movies INNER JOIN reviews ON movies.id=reviews.movie_id WHERE movies.id = ?";
 
@@ -50,16 +56,14 @@ function show(req, res) {
       console.log("query ok");
 
       movie.reviews = reviews;
+
       res.json(movie);
     });
   });
 }
 
-function correctImagePath(movie) {
-  return {
-    ...movie,
-    image: `http://${APP_HOST}:${APP_PORT}/movies_cover/${movie.image}`,
-  };
+function correctImagePath(image) {
+  return `http://${APP_HOST}:${APP_PORT}/movies_cover/${image}`;
 }
 
 module.exports = { index, show };
