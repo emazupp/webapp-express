@@ -1,4 +1,5 @@
 const connection = require("../data/config");
+const { connect } = require("../routers/moviesRouter");
 const { APP_HOST, APP_PORT } = process.env;
 
 function index(req, res) {
@@ -60,7 +61,6 @@ function show(req, res) {
           message: "Query failed",
         });
       }
-      console.log("query ok");
 
       movie.reviews = reviews;
 
@@ -69,8 +69,29 @@ function show(req, res) {
   });
 }
 
+function store(req, res) {
+  const movieID = req.params.id;
+  const storeSql = `INSERT INTO movie.reviews (movie_id, name, vote, text) VALUES (?, ?, ?, ?);`;
+
+  const { name, vote, text } = req.body;
+
+  connection.query(storeSql, [movieID, name, vote, text], (err, results) => {
+    console.log(storeSql);
+    if (err) {
+      console.log(err);
+
+      return res.status(500).json({
+        status: "KO",
+        message: "Query failed",
+      });
+    }
+
+    res.json("OK");
+  });
+}
+
 function correctImagePath(image) {
   return `http://${APP_HOST}:${APP_PORT}/movies_cover/${image}`;
 }
 
-module.exports = { index, show };
+module.exports = { index, show, store };
